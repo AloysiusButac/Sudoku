@@ -15,13 +15,14 @@ void SudokuGame::CreateBoard() {
 }
 // Loads the board to the game window.
 void SudokuGame::LoadBoard() {
-
+    // TODO: Insert here code adding game board visual components to the game window.
+}
+// Clears game window.
+void SudokuGame::ClearWindow() {
+    this->game_window.clear();
 }
 // Displays the game widow
 void SudokuGame::DisplayWindow() {
-    this->game_window.clear();
-    // Add components
-    // this->game_window.Add();
     this->game_window.display();
 }
 // Initializes a Sudoku Game.
@@ -41,7 +42,7 @@ void SudokuGame::Run() {
             if(e.type == sf::Event::Closed)
                 game_window.close();
         }
-        
+        ClearWindow();
         LoadBoard();
         DisplayWindow();
     }

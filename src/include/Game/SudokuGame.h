@@ -14,6 +14,7 @@ public:
     void CreateGameWidow();
     void CreateBoard();
     void LoadBoard();
+    void ClearWindow();
     void DisplayWindow();
     void Start();
     void Run();
