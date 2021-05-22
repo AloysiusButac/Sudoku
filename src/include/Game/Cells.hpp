@@ -32,6 +32,8 @@ std::array<int, 9> Cells::getCol(int x, int y) {
 }
 std::array<int, 9> Cells::getBlock(int x, int y) {
     std::array<int, 9> blk;
+    int x_blk = 9 / x;
+    int y_blk = 9 / y;
     int x_blk2 = 9 % x;
     int y_blk2 = 9 % y;
 
@@ -59,6 +61,15 @@ std::array<int, 9> Cells::getBlock(int x, int y) {
             j++;
         }
     }
+
+    int coord_x = (x_blk * 3) + x_blk2;
+    int coord_y = (y_blk * 3) + y_blk2;
+
+    std::cout << "[" << coord_x << ", " << coord_y << "]\n[";
+    for(auto n : blk) {
+        std::cout << n << " ";
+    }
+    std::cout << "]";
 
     return blk;
 }
