@@ -3,10 +3,6 @@
 
 #include "Game/SudokuGame.hpp"
 
-void change(int& n, int m) {
-    n = m;
-}
-
 int main() {
 
     SudokuGame game;
