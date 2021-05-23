@@ -6,7 +6,7 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 
-#include "Game/Cells.hpp"
+#include "Game/Board.hpp"
 #include "Game/Square.hpp"
 
 class SudokuGame {
@@ -23,13 +23,13 @@ public:
     // Initializes a Sudoku Game.
     // Creates a window and board.
     void Start();
-    // Loads the board to the game window.
+    // Renders board and game window.
     void Render();
     // Runs the game.
-    // Contains the game loop.
+    // Contains the game loop and game logic.
     void Run();
 private:
     sf::RenderWindow game_window;
-    Cells board;
+    Board board;
     std::array<Square, 9*9> board_squares;
 };
