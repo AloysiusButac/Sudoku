@@ -30,7 +30,6 @@ public:
     void fillBoardWithInput(std::array<int, 9*9> values);
     // Remove values in a cell randomly
     void removeCells();
-    void HighlightSquares();
 public:
     int board [9][9];
 };
@@ -268,9 +267,6 @@ void Board::removeCells() {
 
         n = rand() % 10;
     }
-}
-void Board::HighlightSquares() {
-    
 }
 
 

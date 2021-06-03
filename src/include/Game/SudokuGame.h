@@ -16,7 +16,7 @@ public:
 
     // Initializes an sf::RenderWindow that serves as the game window.
     void CreateGameWidow();
-    // Create the squares to be diplayed on the board
+    // Create the squares to be diplayed on the board.
     void CreateSquares();
     // Clears game window.
     void ClearWindow();
@@ -32,12 +32,13 @@ public:
     void Render();
     // Updates the squares on the board
     void UpdateSquares();
-    // Runs the game.
-    // Contains the game loop and game logic.
+    // Runs the game. Contains the game loop and game logic.
     void Run();
     // Takes in a vector position of an input.
     // Returns an index for the selected square relative to the current board.
-    int getSquare(sf::Vector2f square_position);
+    int getSquare(sf::Vector2i square_position);
+    // Highlight   a square at a specific index.
+    void highlightSquare(int index);
 private:
     sf::RenderWindow game_window;
     Board board;
