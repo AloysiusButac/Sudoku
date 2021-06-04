@@ -39,7 +39,10 @@ public:
     int getSquare(sf::Vector2i square_position);
     // Highlight   a square at a specific index.
     void highlightSquare(int index);
+    // Clears all the highlights; Make all squares to the default color.
+    void clearHighlights(int index);
 private:
+    int selected_index = -1;
     sf::RenderWindow game_window;
     Board board;
     std::array<Square, 9*9> board_squares;

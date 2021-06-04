@@ -4,6 +4,10 @@
 #include <iostream>
 #include <cstdlib>
 
+/////////////////////////////////////////////////////
+/// TODO: Revise the get ROW, COL, and BLOCK functions
+/////////////////////////////////////////////////////
+
 class Board {
 public:
     // Return values in the input coordinate's row

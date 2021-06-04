@@ -50,10 +50,15 @@ void SudokuGame::Render() {
 void SudokuGame::UpdateSquares() {
     sf::Color sq_color;
     for(int i = 0;i < board_squares.size(); i++)  {
-        sq_color = board_squares[i].is_selected ? sf::Color(184, 245, 203) : sf::Color::White;
+        if(board_squares[i].is_selected)
+            sq_color = sf::Color(184, 245, 203);
+        else if(board_squares[i].is_highlighted)
+            sq_color = sf::Color(204, 255, 230);
+        else
+            sq_color = sf::Color::White;
+            
         board_squares[i].shape.setFillColor(sq_color);
     }
-    printf("%s -> [%d] ", "Squares updated.", board_squares[0].shape.getFillColor().toInteger());
 }
 void SudokuGame::Run() {
     std::cout << "game running..\n";
@@ -80,17 +85,32 @@ void SudokuGame::Run() {
                 game_window.close();
             }
             if(e.type == sf::Event::KeyPressed) {
-                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) {
-                    
+                if(selected_index >= 0) {
+                    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) 
+                        board_squares[selected_index].text.setString("1");
+                    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) 
+                        board_squares[selected_index].text.setString("2");
+                    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num3)) 
+                        board_squares[selected_index].text.setString("3");
+                    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num4)) 
+                        board_squares[selected_index].text.setString("4");
+                    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num5)) 
+                        board_squares[selected_index].text.setString("5");
+                    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num6)) 
+                        board_squares[selected_index].text.setString("6");
+                    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num7)) 
+                        board_squares[selected_index].text.setString("7");
+                    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num8)) 
+                        board_squares[selected_index].text.setString("8");
+                    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num9)) 
+                        board_squares[selected_index].text.setString("9");
                 }
                 UpdateSquares();
             }
             if(e.type == sf::Event::MouseButtonPressed) {
                 if(sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
-                    int n = getSquare(sf::Mouse::getPosition());
-                    std::cout << "here: " << n << " [ " << sf::Mouse::getPosition().x << ", " << sf::Mouse::getPosition().y << "] " << std::endl;
                     try {
-                        highlightSquare(n);
+                        highlightSquare(getSquare(sf::Mouse::getPosition()));
                     } 
                     catch (int n) { 
                         std::cout << n << std::endl;
@@ -125,8 +145,38 @@ int SudokuGame::getSquare(sf::Vector2i square_position) {
     return (tmp2 * 9) + tmp1;
 }
 void SudokuGame::highlightSquare(int index) {
-    board_squares[index].is_selected = !board_squares[index].is_selected;
-    
-    std::array<int,9> row = board.getRow(index%9, index/9);
-    std::array<int,9> col = board.getCol(index%9, index/9);
+    clearHighlights(index);
+    if(index == selected_index) {
+        board_squares[index].is_selected = false;
+        selected_index = -1;
+        std::cout << "same square clicked.\n";
+    } else 
+    {
+        board_squares[index].is_selected = true;
+        selected_index = index;
+    }
+
+    int row = index / 9;
+    int col = index % 9;
+    int blk_1 = row / 3;
+    int blk_2 = col / 3;
+
+    for(int i = 0; i < board_squares.size(); i++) {
+        if(i == index)
+            continue;
+        if(i / 9 == row) 
+            board_squares[i].is_highlighted = board_squares[index].is_selected;
+        if(i % 9 == col) 
+            board_squares[i].is_highlighted = board_squares[index].is_selected;
+        if(i % 9 / 3 == blk_2 && i / 9 / 3 == blk_1) 
+            board_squares[i].is_highlighted = board_squares[index].is_selected;
+    }
+}
+void SudokuGame::clearHighlights(int index) {
+    for(int i = 0; i < board_squares.size(); i++) {
+        if(i == index)
+            continue;
+        board_squares[i].is_selected = false;
+        board_squares[i].is_highlighted = false;
+    }
 }
