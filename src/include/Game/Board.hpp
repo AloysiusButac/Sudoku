@@ -1,42 +1,8 @@
-#pragma once
-
-#include <array>
-#include <iostream>
-#include <cstdlib>
+#include "Board.h"
 
 /////////////////////////////////////////////////////
 /// TODO: Revise the get ROW, COL, and BLOCK functions
 /////////////////////////////////////////////////////
-
-class Board {
-public:
-    // Return values in the input coordinate's row
-    std::array<int, 9> getRow(int x, int y);
-    // Return values in the input coordinate's coloumn
-    std::array<int, 9> getCol(int x, int y);
-    // Return values in the input coordinate's block
-    std::array<int, 9> getBlock(int x, int y);
-    // Randomizes digits and removes digits in the board array
-    void NewGameBoard();
-    // Validates of a number can be placed in a cell
-    bool isValidPos(int x, int y, int value);
-    // Validates of a number can be placed in a row
-    bool isValidRow(int x, int y, int value);
-    // Validates of a number can be placed in a coloumn
-    bool isValidColoumn(int x, int y, int value);
-    // Validates of a number can be placed in a block
-    bool isValidBlock(int x, int y, int value);
-    // Checks if the grid is empty
-    bool isBoardFull();
-    // Randomizes values in a board
-    void randomize(int b[9][9]);
-    // Fills the board with an inputted value
-    void fillBoardWithInput(std::array<int, 9*9> values);
-    // Remove values in a cell randomly
-    void removeCells();
-public:
-    int board [9][9];
-};
 
 std::array<int, 9> Board::getRow(int x, int y) {
     std::array<int, 9> row;
@@ -54,108 +20,27 @@ std::array<int, 9> Board::getCol(int x, int y) {
 }
 std::array<int, 9> Board::getBlock(int x, int y) {
     // TODO: Fix logic
+    std::vector<int> tmp;
     std::array<int, 9> blk;
-    int x_blk2 = x % 9;
-    int y_blk2 = y % 9;
-    if(x_blk2 == 0 && y_blk2 == 0) { // 0, 0
-        blk[0] = board[x][y];
-        blk[1] = board[x+1][y];
-        blk[2] = board[x+2][y];
-        blk[3] = board[x][y+1];
-        blk[4] = board[x+1][y+1];
-        blk[5] = board[x+2][y+1];
-        blk[6] = board[x][y+2];
-        blk[7] = board[x+1][y+2];
-        blk[8] = board[x+2][y+2];
-    } else if(x_blk2 == 0 && y_blk2 == 1) { // 1, 0
-        blk[0] = board[x-1][y];
-        blk[1] = board[x][y];
-        blk[2] = board[x+1][y];
-        blk[3] = board[x-1][y+1];
-        blk[4] = board[x][y+1];
-        blk[5] = board[x+1][y+1];
-        blk[6] = board[x-1][y+2];
-        blk[7] = board[x][y+2];
-        blk[8] = board[x+1][y+2];
-    } else if(x_blk2 == 0 && y_blk2 == 2) { // 2, 0
-        blk[0] = board[x-2][y];
-        blk[1] = board[x-1][y];
-        blk[2] = board[x][y];
-        blk[3] = board[x-2][y+1];
-        blk[4] = board[x-2][y+1];
-        blk[5] = board[x][y+1];
-        blk[6] = board[x-2][y+2];
-        blk[7] = board[x-1][y+2];
-        blk[8] = board[x][y+2];
-    } else if(x_blk2 == 1 && y_blk2 == 0) { // 0, 1
-        blk[0] = board[x][y-1];
-        blk[1] = board[x+1][y-1];
-        blk[2] = board[x+2][y-1];
-        blk[3] = board[x][y];
-        blk[4] = board[x+1][y];
-        blk[5] = board[x+2][y];
-        blk[6] = board[x][y+1];
-        blk[7] = board[x+1][y+1];
-        blk[8] = board[x+2][y+1];
-    } else if(x_blk2 == 1 && y_blk2 == 1) { // 1, 1
-        blk[0] = board[x-1][y-1];
-        blk[1] = board[x][y-1];
-        blk[2] = board[x+1][y-1];
-        blk[3] = board[x-1][y];
-        blk[4] = board[x][y];
-        blk[5] = board[x+1][y];
-        blk[6] = board[x-1][y+1];
-        blk[7] = board[x][y+1];
-        blk[8] = board[x+1][y+1];
-    } else if(x_blk2 == 1 && y_blk2 == 2) { // 2, 1
-        blk[0] = board[x-2][y-1];
-        blk[1] = board[x-1][y-1];
-        blk[2] = board[x][y-1];
-        blk[3] = board[x-2][y];
-        blk[4] = board[x-2][y];
-        blk[5] = board[x][y];
-        blk[6] = board[x-2][y+1];
-        blk[7] = board[x-1][y+1];
-        blk[8] = board[x][y+1];
-    } else if(x_blk2 == 2 && y_blk2 == 0) { // 0, 2
-        blk[0] = board[x][y-2];
-        blk[1] = board[x+1][y-2];
-        blk[2] = board[x+2][y-2];
-        blk[3] = board[x][y-1];
-        blk[4] = board[x+1][y-1];
-        blk[5] = board[x+2][y-1];
-        blk[6] = board[x][y];
-        blk[7] = board[x+1][y];
-        blk[8] = board[x+2][y];
-    } else if(x_blk2 == 2 && y_blk2 == 1) { // 1, 2
-        blk[0] = board[x-1][y-2];
-        blk[1] = board[x][y-2];
-        blk[2] = board[x+1][y-2];
-        blk[3] = board[x-1][y-1];
-        blk[4] = board[x][y-1];
-        blk[5] = board[x+1][y-1];
-        blk[6] = board[x-1][y];
-        blk[7] = board[x][y];
-        blk[8] = board[x+1][y];
-    } else if(x_blk2 == 2 && y_blk2 == 2) { // 2, 2
-        blk[0] = board[x-2][y-2];
-        blk[1] = board[x-1][y-2];
-        blk[2] = board[x][y-2];
-        blk[3] = board[x-2][y-1];
-        blk[4] = board[x-2][y-1];
-        blk[5] = board[x][y-1];
-        blk[6] = board[x-2][y];
-        blk[7] = board[x-1][y];
-        blk[8] = board[x][y];
-    }
 
-    std::cout << " Coord: [" << x << ", " << y << "] ";
+    // int sq_index = y*9 + x;
+
+    for(int i = 0; i < 81; i++) {
+        if(i % 9 / 3 == y / 3 && i / 9 / 3 == x / 3) { // WACKY MATH
+            tmp.push_back(board[i/9][i%9]);
+        }
+    }
+    std::move(tmp.begin(), tmp.begin()+9, blk.begin());
+    
+    /* DEBUG STUFF */
+    std::cout << "\n     -> Coord: [" << x << ", " << y << "] ";
     std::cout << " Value [" << board[x][y] << "] ";
     std::cout << " Block: [ ";
     for(auto n : blk) {
         std::cout << n << " ";
     }
     std::cout << " ]\n";
+    /* DEBUG STUFF END*/
 
     return blk;
 }
@@ -265,14 +150,27 @@ void Board::removeCells() {
         x = i % 9;
         y = i / 9;
 
-        if(n >= 5) {
+        if(n >= 3) {
             board[x][y] = 0;
         }
 
         n = rand() % 10;
     }
 }
-
+bool Board::checkInput(int x, int y, int value) {
+    if(x < 9 && x > -1 && y < 9 && y > -1 && value <= 9) {
+        return isValidPos(x, y, value);
+    }
+    return false;
+}
+void Board::inputValue(int x, int y, int value) {
+    if(!checkInput(x, y, value)) {
+        printf("\n%s [%d][%d][%d] - row[%s] col[%s] pos[%s}].\t", ">>> Invalid input.", x, y, value, isValidRow(x,y,value) ? "true" : "false", isValidColoumn(x,y,value) ? "true" : "false", isValidPos(x,y,value) ? "true" : "false");
+    } else {
+        printf("Valid input [%d][%d][%d]", x, y, value);
+        board[x][y] = value;
+    }
+}
 
 
 

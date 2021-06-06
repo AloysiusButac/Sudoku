@@ -30,7 +30,7 @@ public:
     void Start(std::array<int, 9*9>);
     // Renders board and game window.
     void Render();
-    // Updates the squares on the board
+    // Updates each squares' visual appearance.
     void UpdateSquares();
     // Runs the game. Contains the game loop and game logic.
     void Run();
