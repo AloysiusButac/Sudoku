@@ -2,28 +2,31 @@
 
 SudokuGame::SudokuGame() { }
 void SudokuGame::CreateGameWidow() {
-    this->game_window.create(sf::VideoMode(700,700),"Sudoku", sf::Style::Titlebar | sf::Style::Close);
+    this->game_window.create(sf::VideoMode(WINDOW_WIDTH,WINDOW_HEIGHT),"Sudoku", sf::Style::Titlebar | sf::Style::Close);
+    this->game_window.setFramerateLimit(30);
 }
 void SudokuGame::CreateSquares() {
     int x = 0, y = 0, n = 0;
-    std::string num = "";
+    std::string num;
     for(int i = 0; i < board_squares.size(); i++) {
         x = i % 9;
         y = i / 9; 
         n = this->board.board[x][y];
         sf::Color sq_color = sf::Color::White;
         num = n > 0 ? std::to_string(n) : " ";
-        sf::RectangleShape tmp(sf::Vector2f(65.0f,65.0f));
+        // SHAPES
+        sf::RectangleShape tmp(sf::Vector2f(SQUARE_SIDE_LENGTH,SQUARE_SIDE_LENGTH));
         board_squares[i].shape = tmp;
-        board_squares[i].shape.setPosition(sf::Vector2f((x+1)*65.0f, (y+1)*65.0f));
+        board_squares[i].shape.setPosition(sf::Vector2f((x+1)*SQUARE_SIDE_LENGTH, (y+1)*SQUARE_SIDE_LENGTH));
         board_squares[i].shape.setOutlineColor(sf::Color::Black);
         board_squares[i].shape.setOutlineThickness(2.0f);
         board_squares[i].shape.setFillColor(sq_color);
+        // TEXTS
         board_squares[i].text.setFont(default_font);
         board_squares[i].text.setCharacterSize(30);
         board_squares[i].text.setFillColor(sf::Color::Black);
         board_squares[i].text.setString(num);
-        board_squares[i].text.setPosition(sf::Vector2f((x+1)*65.0f + 22, (y+1)*65.0f+ 15));
+        board_squares[i].text.setPosition(sf::Vector2f((x+1)*SQUARE_SIDE_LENGTH + 22, (y+1)*SQUARE_SIDE_LENGTH+ 15));
     }
 }
 void SudokuGame::ClearWindow() {
@@ -36,19 +39,20 @@ void SudokuGame::Start() {
     CreateGameWidow();
     this->board.randomize(this->board.board);
 }
-void SudokuGame::Start(std::array<int, 9*9> values) {
+void SudokuGame::Start(std::array<int, 9*9>& values) {
     CreateGameWidow();
     board.fillBoardWithInput(values);
     board.removeCells();
 }
 void SudokuGame::Render() {
-    for(auto r : board_squares) {
+    for(auto& r : board_squares) {
         this->game_window.draw(r.shape);
         this->game_window.draw(r.text);
     }
 }
 void SudokuGame::UpdateSquares() {
     sf::Color sq_color;
+    std::string num;
     for(int i = 0;i < board_squares.size(); i++)  {
         if(board_squares[i].is_selected)
             sq_color = sf::Color(184, 245, 203);
@@ -58,7 +62,7 @@ void SudokuGame::UpdateSquares() {
             sq_color = sf::Color::White;
             
         board_squares[i].shape.setFillColor(sq_color);
-        std::string num = board.board[i%9][i/9] > 0 ? std::to_string(board.board[i%9][i/9]) : " ";
+        num = board.board[i%9][i/9] > 0 ? std::to_string(board.board[i%9][i/9]) : " ";
         board_squares[i].text.setString(num);
     }
 }
@@ -67,11 +71,10 @@ void SudokuGame::Run() {
     std::cout << "creating squares..";
     /* Reading font */
     if(!default_font.loadFromFile("src\\font\\OpenSans-Regular.ttf")) { }
-    /* Setting up the squares */ 
     CreateSquares();
     std::cout << "\rcreating squares finished.\n";
+
     /* DEBUG STUFF */
-    sf::Text debug_text;
     debug_text.setFont(default_font);
     debug_text.setCharacterSize(12);
     debug_text.setFillColor(sf::Color::Black);
@@ -112,7 +115,7 @@ void SudokuGame::Run() {
             if(e.type == sf::Event::MouseButtonPressed) {
                 if(sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
                     try {
-                        highlightSquare(getSquare(sf::Mouse::getPosition()));
+                        highlightSquare(getSquare(sf::Mouse::getPosition(game_window)));
                     } 
                     catch (int n) { 
                         std::cout << n << std::endl;
@@ -123,9 +126,12 @@ void SudokuGame::Run() {
 
             /* DEBUG STUFF */
             if(e.type == sf::Event::MouseMoved) {
-                debug_text.setString("Square: " + std::to_string(getSquare(sf::Mouse::getPosition())));
+                debug_text.setString("Square: " + std::to_string(getSquare(sf::Mouse::getPosition(game_window)))
+                                    + "\n[" + std::to_string(sf::Mouse::getPosition(game_window).x) 
+                                    + ", " + std::to_string(sf::Mouse::getPosition(game_window).y) + "]");
             }
             /* DEBUG STUFF END*/
+
         }
         ClearWindow();
         Render();
@@ -139,20 +145,20 @@ void SudokuGame::Run() {
     std::cout << "game stopped..\n";
 }
 int SudokuGame::getSquare(sf::Vector2i square_position) {
-    sf::Vector2i mouse_pos = square_position - sf::Vector2i(115, 115);
-    auto sq_row = ((mouse_pos.x-42) / 65)-8;
-    auto sq_col = ((mouse_pos.y-42) / 65)-2;
-    int output = (sq_col * 9) + sq_row;
-    return output < 81 ? output : -1;
+    float board_side_l = SQUARE_SIDE_LENGTH * 9;
+    int sq_row = (square_position.y / SQUARE_SIDE_LENGTH) > 10 ? -1 : (square_position.y / SQUARE_SIDE_LENGTH);
+    int sq_col = (square_position.x / SQUARE_SIDE_LENGTH) > 10 ? -1 : (square_position.x / SQUARE_SIDE_LENGTH);
+    int output = (sq_row-1) * 9 + sq_col;
+    bool sq_lw_restrictions = sq_row < 1 || sq_row > 9 || sq_col < 1 || sq_col > 9;
+    return output < 0 || output > 81 || sq_lw_restrictions ? -1 : output-1;
 }
 void SudokuGame::highlightSquare(int index) {
     clearHighlights(index);
-    if(index == selected_index) {
+    if(index == selected_index || index == -1) {
         board_squares[index].is_selected = false;
         selected_index = -1;
-        std::cout << "same square clicked.\n";
-    } else 
-    {
+        // std::cout << "same square clicked.\n";
+    } else {
         board_squares[index].is_selected = true;
         selected_index = index;
     }
