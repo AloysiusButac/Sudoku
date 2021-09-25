@@ -1,7 +1,5 @@
-#include <cstdlib>
 #include <iostream>
-
-#include "Game/SudokuGame.hpp"
+#include "Game/Resources.h"
 
 int main() {
 
@@ -22,6 +20,5 @@ int main() {
     game.Run();
 
     std::cout << "Program Exit.";
-
     return 0;
 }

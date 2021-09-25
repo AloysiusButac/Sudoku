@@ -1,8 +1,6 @@
 #pragma once
 
-#include <array>
-#include <iostream>
-#include <cstdlib>
+#include "Resources.h"
 
 class Board {
 public:
@@ -27,7 +25,7 @@ public:
     // Randomizes values in a board
     void randomize(int b[9][9]);
     // Fills the board with an inputted value
-    void fillBoardWithInput(std::array<int, 9*9> values);
+    void fillBoardWithInput(std::array<int, 9*9>& values);
     // Remove values of cell randomly
     void removeCells();
     // Valicates if the input is correct.

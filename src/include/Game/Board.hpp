@@ -134,26 +134,18 @@ void Board::randomize(int b[9][9]) {
     }
     std::cout << "\n";
 }
-void Board::fillBoardWithInput(std::array<int, 9*9> values) {
-    int x = 0, y = 0;
+void Board::fillBoardWithInput(std::array<int, 81>& values) {
     for(int i = 0; i < 81; i++) {
-        x = i % 9;
-        y = i / 9;
-        board[x][y] = values[i];
+        board[i % 9][i / 9] = values[i];
     }
 }
 void Board::removeCells() {
     time(0);
     int n = rand() % 10;
-    int x = 0, y = 0;
     for(int i = 0; i < 81; i++) {
-        x = i % 9;
-        y = i / 9;
-
         if(n >= 3) {
-            board[x][y] = 0;
+            board[i % 9][i / 9] = 0;
         }
-
         n = rand() % 10;
     }
 }
